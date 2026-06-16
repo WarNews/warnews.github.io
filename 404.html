@@ -2,130 +2,42 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Новости с Войны</title>
+    <title>WarNews | Мир, где вы управляете правилами</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        #news {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .news-item {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin: 10px;
-            padding: 15px;
-            width: 100%;
-            max-width: 600px;
-        }
-        .news-item h3 {
-            margin: 0;
-            color: #007BFF;
-        }
-        .news-item p {
-            color: #555;
-        }
-        .news-item img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-        video {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #eee; margin: 0; }
+        .hero { background: url('https://dalam.world/.dw/DalamWorld.back.jpeg') center/cover; padding: 60px 20px; text-align: center; }
+        .container { max-width: 800px; margin: auto; padding: 40px; background: #1a1a1a; border-radius: 10px; }
+        .btn { display: block; width: 280px; margin: 30px auto; padding: 15px; background: #cc0000; color: #fff; text-align: center; text-decoration: none; font-weight: bold; border-radius: 5px; }
+        .news-block { border-left: 3px solid #cc0000; padding-left: 20px; margin: 30px 0; }
     </style>
 </head>
 <body>
-    <h1>Новости с войны</h1>
-    <div id="news"></div>
 
-    <script>
-        let lastItemId = null; // Переменная для хранения ID последней новости
+<div class="hero">
+    <h1>WarNews: Оперативно, но без стресса</h1>
+</div>
 
-        function loadNews(itemId = null) {
-            const url = 'https://api.dkon.app/api/v3/method/group.getWall';
-            const data = new URLSearchParams();
-            data.append('clientId', '1302');
-            data.append('accountId', '2732');
-            data.append('accessToken', '4e61447439278929651ed5d85a3475b6');
-            data.append('groupId', '1893');
-            if (itemId) {
-                data.append('itemId', itemId); // Добавляем itemId, если он есть
-            }
+<div class="container">
+    <div class="news-block">
+        <h3>В мире нестабильность?</h3>
+        <p>Пока глобальные новости давят на психику, в <strong>Dalam World</strong> кипит жизнь: кланы ведут переговоры, замки переходят из рук в руки, а экономика процветает. Присоединяйтесь к сообществу, где вы — главный герой.</p>
+    </div>
 
-            fetch(url, {
-                method: 'POST',
-                body: data,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const newsDiv = document.getElementById('news');
+    <a href="https://r.dalam.world/?ref=UserID33591" class="btn">ВЫБРАТЬ СВОЙ ПУТЬ</a>
 
-                if (!data.error && data.items.length > 0) {
-                    data.items.forEach(item => {
-                        const newsItem = document.createElement('div');
-                        newsItem.className = 'news-item';
-                        newsItem.innerHTML = `
-                            <!--h3>${item.fromUserFullname} (${item.fromUserUsername})</h3-->
-                            <p>${item.post}</p>
-                            <p><strong>Дата:</strong> ${item.date} (${item.timeAgo})</p>
-                           <a href="https://dkon.app/${item.fromUserUsername}/post/${item.id}" target="_blank"> Комментировать новость / поделиться ссылкой <!--img src="${item.fromUserPhoto}" alt="${item.fromUserFullname}" style="width: 50px; height: 50px;"---></a>
-                        `;
+    <h3>Почему игроки выбирают нас?</h3>
+    <p>Мы даем возможность зарабатывать до 90% с каждой транзакции привлеченных вами игроков. Это надежный актив в цифровом мире, который не блокируют санкции и не обрушивают биржевые сводки.</p>
 
-                        // Проверка на наличие изображения
-                        if (item.imgUrl) {
-                            newsItem.innerHTML += `<img src="${item.imgUrl}" alt="Изображение поста">`;
-                        }
-
-                        // Проверка на наличие видео
-                        if (item.videoUrl) {
-                            newsItem.innerHTML += `
-                                <video controls>
-                                    <source src="${item.videoUrl}" type="video/mp4">
-                                    Ваш браузер не поддерживает видео.
-                                </video>
-                            `;
-                        }
-
-                        newsDiv.appendChild(newsItem);
-                        lastItemId = item.id; // Обновляем lastItemId на ID текущей новости
-                    });
-                } else {
-                    newsDiv.innerHTML = '<p>Нет новостей для отображения.</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                document.getElementById('news').innerHTML = '<p>Произошла ошибка при загрузке новостей.</p>';
-            });
-        }
-
-        // Автоматическая загрузка новостей при загрузке страницы
-        window.onload = () => {
-            loadNews(); // Загружаем новости при загрузке страницы
-            setInterval(() => {
-                loadNews(lastItemId); // Загружаем новые новости каждые 30 секунд
-            }, 30000); // 30000 миллисекунд = 30 секунд
-        };
-    </script>
+    <h3>Системные требования</h3>
+    <table>
+        <tr><th>Компонент</th><th>Мин.</th><th>Рекоменд.</th></tr>
+        <tr><td>CPU</td><td>2.4 GHz</td><td>3.2 GHz</td></tr>
+        <tr><td>RAM</td><td>1 Gb</td><td>4 Gb</td></tr>
+        <tr><td>GPU</td><td>256 Mb</td><td>4 Gb</td></tr>
+    </table>
+    <p style="margin-top:20px; font-size: 0.9em; color: #888;">Игра поддерживает Linux и macOS через Wine.</p>
+</div>
+    
+<script src="https://dalam.world/.dw/lnd.cfg.js" defer></script>
 </body>
 </html>
